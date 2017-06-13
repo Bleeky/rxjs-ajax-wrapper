@@ -1,0 +1,28 @@
+{
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["./src"],
+      }
+    ],
+    [
+      "transform-runtime",
+      {
+        "polyfill": false,
+        "regenerator": true,
+      }
+    ],
+  ],
+  "presets": [
+    "env", [
+      "latest",
+      {
+        "es2015": {
+          "modules": false,
+        },
+      },
+    ],
+    "stage-0",
+  ],
+}
