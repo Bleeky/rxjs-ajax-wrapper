@@ -12,11 +12,8 @@ class RxjsWrapper {
 
   buildUrl(url, urlParams, queryParams) { // eslint-disable-line
     let finalUrl = url;
-    console.log(urlParams);
     Object.keys(urlParams).forEach((param) => {
-      console.log(param, urlParams[param]);
       finalUrl = finalUrl.replace(`:${param}`, urlParams[param]);
-      console.log(finalUrl);
     });
     if (queryParams.constructor === Object && Object.keys(queryParams).length > 0) {
       finalUrl = finalUrl.concat('?', Object.keys(queryParams).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`));

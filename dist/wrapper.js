@@ -44,11 +44,8 @@ var RxjsWrapper = function () {
     value: function buildUrl(url, urlParams, queryParams) {
       // eslint-disable-line
       var finalUrl = url;
-      console.log(urlParams);
       Object.keys(urlParams).forEach(function (param) {
-        console.log(param, urlParams[param]);
         finalUrl = finalUrl.replace(':' + param, urlParams[param]);
-        console.log(finalUrl);
       });
       if (queryParams.constructor === Object && Object.keys(queryParams).length > 0) {
         finalUrl = finalUrl.concat('?', Object.keys(queryParams).map(function (key) {
