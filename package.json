@@ -1,6 +1,6 @@
 {
   "name": "rxjs-ajax-wrapper",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Simple wrapper using rxjs ajax.",
   "main": "./dist/",
   "scripts": {
@@ -31,5 +31,4 @@
     "mocha": "^3.4.2",
     "rimraf": "^2.5.2"
   },
-  "private": true
 }
