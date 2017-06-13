@@ -45,7 +45,9 @@ var RxjsWrapper = function () {
       // eslint-disable-line
       var finalUrl = url;
       Object.keys(urlParams).forEach(function (param) {
+        console.log(param, urlParams[param]);
         finalUrl = finalUrl.replace(':' + param, urlParams[param]);
+        console.log(finalUrl);
       });
       if (queryParams.constructor === Object && Object.keys(queryParams).length > 0) {
         finalUrl = finalUrl.concat('?', Object.keys(queryParams).map(function (key) {
@@ -63,7 +65,7 @@ var RxjsWrapper = function () {
         url: this.buildUrl(def.url, urlParams, queryParams),
         method: def.method,
         headers: def.headers ? def.headers(this.store) : null,
-        responseType: def.responseType,
+        responseType: def.responseType ? def.responseType : 'json',
         body: body
       };
     }
