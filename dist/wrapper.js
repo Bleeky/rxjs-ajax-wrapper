@@ -44,6 +44,7 @@ var RxjsWrapper = function () {
     value: function buildUrl(url, urlParams, queryParams) {
       // eslint-disable-line
       var finalUrl = url;
+      console.log(urlParams);
       Object.keys(urlParams).forEach(function (param) {
         console.log(param, urlParams[param]);
         finalUrl = finalUrl.replace(':' + param, urlParams[param]);
