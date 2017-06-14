@@ -26,17 +26,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var RxjsWrapper = function () {
   function RxjsWrapper(apiDefs) {
-    var store = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {
-      return null;
-    };
     (0, _classCallCheck3.default)(this, RxjsWrapper);
 
-    this.store = store;
     this.apiDefs = apiDefs;
     this.routes = [];
+    this.requestMiddleware = function () {
+      return {};
+    };
+    this.errorMiddleware = function (request) {
+      return request;
+    };
 
     this.buildUrl = this.buildUrl.bind(this);
     this.defBuilder = this.defBuilder.bind(this);
+    this.init = this.init.bind(this);
+
+    this.init();
   }
 
   (0, _createClass3.default)(RxjsWrapper, [{
@@ -59,12 +64,23 @@ var RxjsWrapper = function () {
   }, {
     key: 'defBuilder',
     value: function defBuilder(def, urlParams, body, queryParams) {
-      return {
+      return (0, _extends4.default)({
         url: this.buildUrl(def.url, urlParams, queryParams),
         method: def.method,
-        headers: def.headers ? def.headers(this.store) : null,
+        headers: def.headers,
         responseType: def.responseType ? def.responseType : 'json',
         body: body
+      }, this.requestMiddleware());
+    }
+  }, {
+    key: 'addRequestMiddleware',
+    value: function addRequestMiddleware(middleware) {
+      for (var _len = arguments.length, params = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        params[_key - 1] = arguments[_key];
+      }
+
+      this.requestMiddleware = function () {
+        return middleware.apply(undefined, params);
       };
     }
   }, {
