@@ -1,13 +1,17 @@
 import { ajax } from 'rxjs/observable/dom/ajax';
 
 class RxjsWrapper {
-  constructor(apiDefs, store = () => null) {
-    this.store = store;
+  constructor(apiDefs) {
     this.apiDefs = apiDefs;
     this.routes = [];
+    this.requestMiddleware = () => ({});
+    this.errorMiddleware = request => request;
 
     this.buildUrl = ::this.buildUrl;
     this.defBuilder = ::this.defBuilder;
+    this.init = ::this.init;
+
+    this.init();
   }
 
   buildUrl(url, urlParams, queryParams) { // eslint-disable-line
@@ -27,10 +31,15 @@ class RxjsWrapper {
     return {
       url: this.buildUrl(def.url, urlParams, queryParams),
       method: def.method,
-      headers: def.headers ? def.headers(this.store) : null,
+      headers: def.headers,
       responseType: def.responseType ? def.responseType : 'json',
       body,
+      ...this.requestMiddleware(),
     };
+  }
+
+  addRequestMiddleware(middleware, ...params) {
+    this.requestMiddleware = () => middleware(...params);
   }
 
   init() {

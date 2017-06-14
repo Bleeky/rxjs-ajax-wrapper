@@ -5,23 +5,14 @@ const apiDefs = {
     url: 'https://ghibliapi.herokuapp.com/films',
     method: 'GET',
     responseType: 'json',
-    // headers: store => ({
-    //   Authorization: `Bearer ${store.getState().auth.token}`,
-    // }),
   },
   getSingleRes: {
     url: 'localhost:8080/res/:id',
     method: 'GET',
-    // headers: store => ({
-    //   Authorization: `Bearer ${store.getState().auth.token}`,
-    // }),
   },
   postRes: {
     url: 'localhost:8080/res',
     method: 'POST',
-    // headers: store => ({
-    //   Authorization: `Bearer ${store.getState().auth.token}`,
-    // }),
   },
 };
 
