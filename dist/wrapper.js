@@ -55,7 +55,7 @@ var RxjsWrapper = function () {
       if (queryParams.constructor === Object && Object.keys(queryParams).length > 0) {
         finalUrl = finalUrl.concat('?', Object.keys(queryParams).map(function (key) {
           return encodeURIComponent(key) + '=' + encodeURIComponent(queryParams[key]);
-        }));
+        }).join('&'));
       } else if (queryParams.constructor === String) {
         finalUrl = finalUrl.concat('?', queryParams);
       }

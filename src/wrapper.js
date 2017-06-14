@@ -20,7 +20,7 @@ class RxjsWrapper {
       finalUrl = finalUrl.replace(`:${param}`, urlParams[param]);
     });
     if (queryParams.constructor === Object && Object.keys(queryParams).length > 0) {
-      finalUrl = finalUrl.concat('?', Object.keys(queryParams).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`));
+      finalUrl = finalUrl.concat('?', Object.keys(queryParams).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`).join('&'));
     } else if (queryParams.constructor === String) {
       finalUrl = finalUrl.concat('?', queryParams);
     }
