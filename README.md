@@ -46,14 +46,14 @@ Checkout [https://github.com/Reactive-Extensions/RxJS-DOM/blob/master/doc/operat
 ## Options
 
 Method | Explanation | Arguments | Example
------------- | ------------- | -------------
+------------ | ------------- | -------------  | -------------
 `addRequestMiddleware()` | Define a function that returns arguments to append to the request header. | `(middlewareFunc, middlewareFuncParams)` | `api.addRequestMiddleware((store) => ({Authorization: store.getState().token}));`
 
 # Todo ideas
 
 * All of the Rx.Ajax options compatibility.
 * Error handling middleware.
-Example : 
+Example :
 ```javascript
 api.addErrorMiddleware([{ code: 404, handler: (request) => { dispatch(errorHandler(request.error)); }} ]);
 ```
