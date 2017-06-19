@@ -64,10 +64,8 @@ var RxjsWrapper = function () {
   }, {
     key: 'defBuilder',
     value: function defBuilder(def, urlParams, body, queryParams) {
-      return (0, _extends4.default)({
+      return (0, _extends4.default)({}, def, {
         url: this.buildUrl(def.url, urlParams, queryParams),
-        method: def.method,
-        headers: def.headers,
         responseType: def.responseType ? def.responseType : 'json',
         body: body
       }, this.requestMiddleware());

@@ -26,9 +26,13 @@ const apiDefs = {
 };
 ```
 
+You can check all the available request params [here](https://github.com/Reactive-Extensions/RxJS-DOM/blob/master/doc/operators/ajax.md)
+
 Step 2: Initialize the wrapper
 
 ```javascript
+import { RxjsWrapper } from 'rxjs-ajax-wrapper';
+
 const api = new RxjsWrapper(apiDefs);
 ```
 
@@ -45,13 +49,20 @@ Checkout [https://github.com/Reactive-Extensions/RxJS-DOM/blob/master/doc/operat
 
 ## Options
 
+## Functions
+
+Function | Explanation | Arguments | Return Value | Example
+------------ | ------------- | -------------  | -------------  | -------------
+`combineWrappers()` | Combine multiples wrappers. | `(wrappers)` | The combined wrappers, with each wrapper routes in the respective wrapper object. | `combineWrappers(authWrapper, filmWrapper);`
+
+## Methods
+
 Method | Explanation | Arguments | Example
 ------------ | ------------- | -------------  | -------------
 `addRequestMiddleware()` | Define a function that returns arguments to append to the request header. | `(middlewareFunc, middlewareFuncParams)` | `api.addRequestMiddleware((store) => ({Authorization: store.getState().token}));`
 
 # Todo ideas
 
-* All of the Rx.Ajax options compatibility.
 * Error handling middleware.
 Example :
 ```javascript

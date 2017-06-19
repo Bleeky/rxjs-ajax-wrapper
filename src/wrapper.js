@@ -29,9 +29,8 @@ class RxjsWrapper {
 
   defBuilder(def, urlParams, body, queryParams) {
     return {
+      ...def,
       url: this.buildUrl(def.url, urlParams, queryParams),
-      method: def.method,
-      headers: def.headers,
       responseType: def.responseType ? def.responseType : 'json',
       body,
       ...this.requestMiddleware(),
