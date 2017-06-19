@@ -53,7 +53,7 @@ Checkout [https://github.com/Reactive-Extensions/RxJS-DOM/blob/master/doc/operat
 
 Function | Explanation | Arguments | Return Value | Example
 ------------ | ------------- | -------------  | -------------  | -------------
-`combineWrappers()` | Combine multiples wrappers. | `(wrappers)` | The combined wrappers, with each wrapper routes in the respective wrapper object. | `combineWrappers(authWrapper, filmWrapper);`
+`combineWrappers()` | Combine multiples wrappers. | `({wrapperKey: wrapper, ...})` | The combined wrappers, with each wrapper routes in the respective wrapper object. | `combineWrappers({authWrapper, filmWrapper});`
 
 ## Methods
 

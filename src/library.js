@@ -1,7 +1,7 @@
-const combineWrappers = (...wrappers) => {
+const combineWrappers = (wrappers) => {
   let wrapped = {};
-  wrappers.forEach((wrapper) => {
-    wrapped = { [wrapper]: wrapper.routes, ...wrapped };
+  Object.keys(wrappers).forEach((key) => {
+    wrapped = { [key]: wrappers[key].routes, ...wrapped };
   });
   return wrapped;
 };

@@ -14,14 +14,10 @@ var _extends4 = _interopRequireDefault(_extends3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var combineWrappers = function combineWrappers() {
-  for (var _len = arguments.length, wrappers = Array(_len), _key = 0; _key < _len; _key++) {
-    wrappers[_key] = arguments[_key];
-  }
-
+var combineWrappers = function combineWrappers(wrappers) {
   var wrapped = {};
-  wrappers.forEach(function (wrapper) {
-    wrapped = (0, _extends4.default)((0, _defineProperty3.default)({}, wrapper, wrapper.routes), wrapped);
+  Object.keys(wrappers).forEach(function (key) {
+    wrapped = (0, _extends4.default)((0, _defineProperty3.default)({}, key, wrappers[key].routes), wrapped);
   });
   return wrapped;
 };
