@@ -17,8 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var combineWrappers = function combineWrappers(wrappers) {
   var wrapped = {};
   Object.keys(wrappers).forEach(function (key) {
-    console.log(key, wrappers[key]);
-    wrapped = (0, _extends4.default)((0, _defineProperty3.default)({}, key, wrappers[key].routes), wrapped);
+    wrapped = (0, _extends4.default)((0, _defineProperty3.default)({}, key, wrappers[key]), wrapped);
   });
   return wrapped;
 };
