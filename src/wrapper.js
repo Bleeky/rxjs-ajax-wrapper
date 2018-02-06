@@ -14,15 +14,15 @@ class RxjsWrapper {
     this.init();
   }
 
-  buildUrl(url, urlParams, queryParams) { // eslint-disable-line
+  buildUrl(url, params = {}, query = {}) { // eslint-disable-line
     let finalUrl = url;
-    Object.keys(urlParams).forEach((param) => {
-      finalUrl = finalUrl.replace(`:${param}`, urlParams[param]);
+    Object.keys(params).forEach((param) => {
+      finalUrl = finalUrl.replace(`:${param}`, params[param]);
     });
-    if (queryParams.constructor === Object && Object.keys(queryParams).length > 0) {
-      finalUrl = finalUrl.concat('?', Object.keys(queryParams).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`).join('&'));
-    } else if (queryParams.constructor === String) {
-      finalUrl = finalUrl.concat('?', queryParams);
+    if (query.constructor === Object && Object.keys(query).length > 0) {
+      finalUrl = finalUrl.concat('?', Object.keys(query).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`).join('&'));
+    } else if (query.constructor === String) {
+      finalUrl = finalUrl.concat('?', query);
     }
     return finalUrl;
   }
@@ -37,7 +37,7 @@ class RxjsWrapper {
     });
     return {
       ...def,
-      url: this.buildUrl(def.url, req.urlParams, req.queryParams),
+      url: this.buildUrl(def.url, req.params, req.query),
       responseType: def.responseType ? def.responseType : 'json',
       body: req.body,
       ...middlewaresArgs,
@@ -60,7 +60,7 @@ class RxjsWrapper {
     let routes = {};
     Object.keys(this.apiDefs).forEach((key) => {
       routes = { ...routes,
-        [`${key}`]: (reqSettings = { urlParams: {}, body: null, queryParams: {} }) => {
+        [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
           req.subscribe(null, (err) => {
             this.errorMiddlewares.forEach((middleware) => {

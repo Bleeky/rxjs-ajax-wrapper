@@ -46,18 +46,20 @@ var RxjsWrapper = function () {
 
   (0, _createClass3.default)(RxjsWrapper, [{
     key: 'buildUrl',
-    value: function buildUrl(url, urlParams, queryParams) {
+    value: function buildUrl(url) {
+      var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var query = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       // eslint-disable-line
       var finalUrl = url;
-      Object.keys(urlParams).forEach(function (param) {
-        finalUrl = finalUrl.replace(':' + param, urlParams[param]);
+      Object.keys(params).forEach(function (param) {
+        finalUrl = finalUrl.replace(':' + param, params[param]);
       });
-      if (queryParams.constructor === Object && Object.keys(queryParams).length > 0) {
-        finalUrl = finalUrl.concat('?', Object.keys(queryParams).map(function (key) {
-          return encodeURIComponent(key) + '=' + encodeURIComponent(queryParams[key]);
+      if (query.constructor === Object && Object.keys(query).length > 0) {
+        finalUrl = finalUrl.concat('?', Object.keys(query).map(function (key) {
+          return encodeURIComponent(key) + '=' + encodeURIComponent(query[key]);
         }).join('&'));
-      } else if (queryParams.constructor === String) {
-        finalUrl = finalUrl.concat('?', queryParams);
+      } else if (query.constructor === String) {
+        finalUrl = finalUrl.concat('?', query);
       }
       return finalUrl;
     }
@@ -73,7 +75,7 @@ var RxjsWrapper = function () {
         }
       });
       return (0, _extends4.default)({}, def, {
-        url: this.buildUrl(def.url, req.urlParams, req.queryParams),
+        url: this.buildUrl(def.url, req.params, req.query),
         responseType: def.responseType ? def.responseType : 'json',
         body: req.body
       }, middlewaresArgs);
@@ -116,7 +118,7 @@ var RxjsWrapper = function () {
       var routes = {};
       Object.keys(this.apiDefs).forEach(function (key) {
         routes = (0, _extends4.default)({}, routes, (0, _defineProperty3.default)({}, '' + key, function undefined() {
-          var reqSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { urlParams: {}, body: null, queryParams: {} };
+          var reqSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { params: {}, body: null, query: {} };
 
           var req = (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));
           req.subscribe(null, function (err) {
