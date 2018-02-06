@@ -9,10 +9,26 @@ const apiDefs = {
     method: 'GET',
     responseType: 'json',
   },
+  getAllFilmsIgnore: {
+    url: 'https://ghibliapi.herokuapp.com/films',
+    method: 'GET',
+    responseType: 'json',
+    ignoreMiddlewares: [
+      'token',
+    ],
+  },
   getWrongAllFilms: {
     url: 'https://ghibliapi.herokuapp.com/filmss',
     method: 'GET',
     responseType: 'json',
+  },
+  getWrongAllFilmsIgnore: {
+    url: 'https://ghibliapi.herokuapp.com/filmss',
+    method: 'GET',
+    responseType: 'json',
+    ignoreMiddlewares: [
+      '404',
+    ],
   },
 };
 
@@ -26,19 +42,35 @@ describe('Wrapper', () => {
   describe('#setup a middleware', () => {
     it('should add the middleware', (done) => {
       const api = new RxjsWrapper(apiDefs);
-      api.addRequestMiddleware(() => ({ headers: { Authorization: 'Bearer testing' } }));
+      api.addRequestMiddlewares([{ name: 'token', handler: () => ({ headers: { Authorization: 'Bearer testing' } }) }]);
       done();
     });
   });
   describe('#have middleware in request header', () => {
     it('should contains correct headers', (done) => {
       const api = new RxjsWrapper(apiDefs);
-      api.addRequestMiddleware(() => ({ headers: { Authorization: 'Bearer testing' } }));
+      api.addRequestMiddlewares([{ name: 'token', handler: getBearer => ({ headers: { Authorization: getBearer() } }) }], () => 'Bearer testing');
       api.routes.getAllFilms().subscribe(
         (data) => {
           chai.should();
           chai.expect(data.request.headers).to.have.property('Authorization');
           chai.assert.equal('Bearer testing', data.request.headers.Authorization);
+          done();
+        },
+        (error) => {
+          done();
+        },
+      );
+    });
+  });
+  describe('#have ignored middleware in request header', () => {
+    it('should contains correct headers', (done) => {
+      const api = new RxjsWrapper(apiDefs);
+      api.addRequestMiddlewares([{ name: 'token', handler: () => ({ headers: { Authorization: 'Bearer testing' } }) }]);
+      api.routes.getAllFilmsIgnore().subscribe(
+        (data) => {
+          chai.should();
+          chai.expect(data.request.headers).to.not.have.property('Authorization');
           done();
         },
         (error) => {
@@ -79,6 +111,54 @@ describe('Wrapper', () => {
         },
         (error) => {
           chai.assert.equal(404, error.status);
+          done();
+        },
+      );
+    });
+  });
+  describe('#call to getWrongAllFilms(), call error middleware and get error', () => {
+    it('Should get a 404 error', (done) => {
+      const api = new RxjsWrapper(apiDefs);
+      api.addErrorMiddlewares([
+        {
+          name: '404',
+          handler: (request) => {
+            chai.assert.equal('404', request.status);
+            if (request.status === 404) {
+              chai.should();
+              chai.assert.equal('404', request.status);
+            }
+          },
+        },
+      ]);
+      api.routes.getWrongAllFilms().subscribe(
+        (data) => {
+          done();
+        },
+        (error) => {
+          chai.assert.equal('404', error.status);
+          done();
+        },
+      );
+    });
+  });
+  describe('#call to getWrongAllFilms(), don\'t call error middleware and get error', () => {
+    it('Should get a 404 error', (done) => {
+      const api = new RxjsWrapper(apiDefs);
+      api.addErrorMiddlewares([
+        {
+          name: '404',
+          handler: (request) => {
+            chai.assert.equal('invalid', request.status);
+          },
+        },
+      ]);
+      api.routes.getWrongAllFilmsIgnore().subscribe(
+        (data) => {
+          done();
+        },
+        (error) => {
+          chai.assert.equal('404', error.status);
           done();
         },
       );

@@ -59,12 +59,28 @@ Function | Explanation | Arguments | Return Value | Example
 
 Method | Explanation | Arguments | Example
 ------------ | ------------- | -------------  | -------------
-`addRequestMiddleware()` | Define a function that returns arguments to append to the request header. | `(middlewareFunc, middlewareFuncParams)` | `api.addRequestMiddleware((store) => ({Authorization: store.getState().token}));`
+`addRequestMiddlewares()` | Define a function that returns arguments to append to the request header. | `([{name: middlewareName: handler: middlewareFunc}], middlewareFuncParams)` | `api.addRequestMiddlewares([name: 'token', handler: (store) => ({Authorization: store.getState().token})], store);`
+`addErrorMiddlewares()` | Define a function that returns functions to call when an error occurs. | `([{name: middlewareName: handler: middlewareFunc}], middlewareFuncParams)` | `api.addErrorMiddlewares([name: '404Middleware', handler: (request) => { if (request.status === 404) dispatch(somtething()) }]);`
+
+## Ignore middleware on specific route.
+
+Simple, just an set an array `ignoreMiddlewares` containing the names of the middlewares you wish to ignore. Works for both errorMiddlewares and requestMiddlewares.
+
+Example :
+```javascript
+const apiDefs = {
+  specialRoute: {
+    url: 'https://ghibliapi.herokuapp.com/films',
+    method: 'GET',
+    responseType: 'json',
+    ignoreMiddlewares: [
+      '404',
+      'tokenMiddleware',
+    ]
+  },
+};
+```
 
 # Todo ideas
 
-* Error handling middleware.
-Example :
-```javascript
-api.addErrorMiddleware([{ code: 404, handler: (request) => { dispatch(errorHandler(request.error)); }} ]);
-```
+* Update/delete middleware.

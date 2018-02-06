@@ -4,8 +4,8 @@ class RxjsWrapper {
   constructor(apiDefs) {
     this.apiDefs = apiDefs;
     this.routes = [];
-    this.requestMiddleware = () => ({});
-    this.errorMiddleware = request => request;
+    this.requestMiddlewares = [];
+    this.errorMiddlewares = [];
 
     this.buildUrl = ::this.buildUrl;
     this.defBuilder = ::this.defBuilder;
@@ -27,24 +27,52 @@ class RxjsWrapper {
     return finalUrl;
   }
 
-  defBuilder(def, urlParams, body, queryParams) {
+  defBuilder(def, req) {
+    let middlewaresArgs = {};
+    this.requestMiddlewares.forEach((middleware) => {
+      if (!def.ignoreMiddlewares ||
+        !def.ignoreMiddlewares.find(ignore => ignore === middleware.name)) {
+        middlewaresArgs = { ...middlewaresArgs, ...middleware.handler() };
+      }
+    });
     return {
       ...def,
-      url: this.buildUrl(def.url, urlParams, queryParams),
+      url: this.buildUrl(def.url, req.urlParams, req.queryParams),
       responseType: def.responseType ? def.responseType : 'json',
-      body,
-      ...this.requestMiddleware(),
+      body: req.body,
+      ...middlewaresArgs,
     };
   }
 
-  addRequestMiddleware(middleware, ...params) {
-    this.requestMiddleware = () => middleware(...params);
+  addRequestMiddlewares(middlewares, ...params) {
+    middlewares.forEach((middleware) => {
+      this.requestMiddlewares = [...this.requestMiddlewares, { name: middleware.name, handler: () => middleware.handler(...params) }];
+    });
+  }
+
+  addErrorMiddlewares(middlewares, ...params) {
+    middlewares.forEach((middleware) => {
+      this.errorMiddlewares = [...this.errorMiddlewares, { name: middleware.name, handler: request => middleware.handler(request, ...params) }];
+    });
   }
 
   init() {
     let routes = {};
     Object.keys(this.apiDefs).forEach((key) => {
-      routes = { ...routes, [`${key}`]: (urlParams = {}, body = null, queryParams = {}) => ajax(this.defBuilder(this.apiDefs[key], urlParams, body, queryParams)) };
+      routes = { ...routes,
+        [`${key}`]: (reqSettings = { urlParams: {}, body: null, queryParams: {} }) => {
+          const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
+          req.subscribe(null, (err) => {
+            this.errorMiddlewares.forEach((middleware) => {
+              if (!this.apiDefs[key].ignoreMiddlewares ||
+                !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)) {
+                middleware.handler(err);
+              }
+            });
+          });
+          return req;
+        },
+      };
     });
     this.routes = routes;
   }
