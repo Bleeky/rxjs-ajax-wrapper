@@ -1,5 +1,11 @@
 ### rxjs-ajax-wrapper
 
+[![Version](https://img.shields.io/npm/v/rxjs-ajax-wrapper.svg)](https://www.npmjs.org/package/rxjs-ajax-wrapper)
+[![npm download][download-image]][download-url]
+
+[download-image]: https://img.shields.io/npm/dm/rxjs-ajax-wrapper.svg?style=flat-square
+[download-url]: https://npmjs.org/package/rxjs-ajax-wrapper
+
 Simple to use and simple to setup wrapper for rxjs. Allows you to define your distant resources api and call them on the fly.
 
 ## How to use
