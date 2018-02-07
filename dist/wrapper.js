@@ -119,18 +119,19 @@ var RxjsWrapper = function () {
       Object.keys(this.apiDefs).forEach(function (key) {
         routes = (0, _extends4.default)({}, routes, (0, _defineProperty3.default)({}, '' + key, function undefined() {
           var reqSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { params: {}, body: null, query: {} };
+          return (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings)
+          // const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
+          // req.subscribe(() => { console.log('couille'); }, (err) => {
+          //   this.errorMiddlewares.forEach((middleware) => {
+          //     if (!this.apiDefs[key].ignoreMiddlewares ||
+          //       !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)) {
+          //       middleware.handler(err);
+          //     }
+          //   });
+          // });
+          // return req;
 
-          var req = (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));
-          req.subscribe(null, function (err) {
-            _this3.errorMiddlewares.forEach(function (middleware) {
-              if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
-                return ignore === middleware.name;
-              })) {
-                middleware.handler(err);
-              }
-            });
-          });
-          return req;
+          );
         }));
       });
       this.routes = routes;

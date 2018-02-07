@@ -60,18 +60,18 @@ class RxjsWrapper {
     let routes = {};
     Object.keys(this.apiDefs).forEach((key) => {
       routes = { ...routes,
-        [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
-          const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
-          req.subscribe(null, (err) => {
-            this.errorMiddlewares.forEach((middleware) => {
-              if (!this.apiDefs[key].ignoreMiddlewares ||
-                !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)) {
-                middleware.handler(err);
-              }
-            });
-          });
-          return req;
-        },
+        [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => ajax(this.defBuilder(this.apiDefs[key], reqSettings))
+          // const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
+          // req.subscribe(() => { console.log('couille'); }, (err) => {
+          //   this.errorMiddlewares.forEach((middleware) => {
+          //     if (!this.apiDefs[key].ignoreMiddlewares ||
+          //       !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)) {
+          //       middleware.handler(err);
+          //     }
+          //   });
+          // });
+          // return req;
+        ,
       };
     });
     this.routes = routes;
