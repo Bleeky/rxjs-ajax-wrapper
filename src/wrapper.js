@@ -52,7 +52,7 @@ class RxjsWrapper {
 
   addErrorMiddlewares(middlewares, ...params) {
     middlewares.forEach((middleware) => {
-      this.errorMiddlewares = [...this.errorMiddlewares, { name: middleware.name, handler: request => middleware.handler(request, ...params) }];
+      this.errorMiddlewares = [...this.errorMiddlewares, { name: middleware.name, handler: (request, originalRequest) => middleware.handler(request, { ...params, originalRequest }) }];
     });
   }
 
@@ -66,7 +66,7 @@ class RxjsWrapper {
             this.errorMiddlewares.forEach((middleware) => {
               if (!this.apiDefs[key].ignoreMiddlewares ||
                 !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)) {
-                middleware.handler(err);
+                middleware.handler(err, () => ajax(this.defBuilder(this.apiDefs[key], reqSettings)));
               }
             });
           });
