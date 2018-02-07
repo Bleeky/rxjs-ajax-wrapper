@@ -62,7 +62,7 @@ class RxjsWrapper {
       routes = { ...routes,
         [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
-          req.subscribe(() => { console.log('couille'); }, (err) => {
+          req.subscribe(null, (err) => {
             this.errorMiddlewares.forEach((middleware) => {
               if (!this.apiDefs[key].ignoreMiddlewares ||
                 !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)) {
