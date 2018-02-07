@@ -105,8 +105,8 @@ var RxjsWrapper = function () {
       }
 
       middlewares.forEach(function (middleware) {
-        _this2.errorMiddlewares = [].concat((0, _toConsumableArray3.default)(_this2.errorMiddlewares), [{ name: middleware.name, handler: function handler(request, originalRequest) {
-            return middleware.handler(request, (0, _extends4.default)({}, params, { originalRequest: originalRequest }));
+        _this2.errorMiddlewares = [].concat((0, _toConsumableArray3.default)(_this2.errorMiddlewares), [{ name: middleware.name, handler: function handler(request) {
+            return middleware.handler.apply(middleware, [request].concat(params));
           } }]);
       });
     }
@@ -126,9 +126,7 @@ var RxjsWrapper = function () {
               if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
                 return ignore === middleware.name;
               })) {
-                middleware.handler(err, function () {
-                  return (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));
-                });
+                middleware.handler(err);
               }
             });
           });
