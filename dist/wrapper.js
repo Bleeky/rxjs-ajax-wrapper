@@ -78,7 +78,7 @@ var RxjsWrapper = function () {
         url: this.buildUrl(def.url, req.params, req.query),
         responseType: def.responseType ? def.responseType : 'json',
         body: req.body
-      }, middlewaresArgs);
+      }, req, middlewaresArgs);
     }
   }, {
     key: 'addRequestMiddlewares',
