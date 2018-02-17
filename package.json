@@ -1,6 +1,6 @@
 {
   "name": "rxjs-ajax-wrapper",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Simple wrapper using rxjs ajax.",
   "main": "./dist/",
   "scripts": {
