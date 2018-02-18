@@ -78,7 +78,7 @@ var RxjsWrapper = function () {
           middlewaresArgs = (0, _extends4.default)({}, middlewaresArgs, middleware.handler());
         }
       });
-      var mergedReqSettings = (0, _deepmerge2.default)({ middlewaresArgs: middlewaresArgs, req: req });
+      var mergedReqSettings = (0, _deepmerge2.default)(middlewaresArgs, req);
       mergedReqSettings = (0, _deepmerge2.default)({
         method: def.method,
         url: this.buildUrl(def.url, req.params, req.query),

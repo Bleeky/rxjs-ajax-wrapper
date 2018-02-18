@@ -36,7 +36,7 @@ class RxjsWrapper {
         middlewaresArgs = { ...middlewaresArgs, ...middleware.handler() };
       }
     });
-    let mergedReqSettings = deepmerge({ middlewaresArgs, req });
+    let mergedReqSettings = deepmerge(middlewaresArgs, req);
     mergedReqSettings = deepmerge({
       method: def.method,
       url: this.buildUrl(def.url, req.params, req.query),
