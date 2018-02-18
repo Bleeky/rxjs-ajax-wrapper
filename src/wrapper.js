@@ -1,4 +1,5 @@
 import { ajax } from 'rxjs/observable/dom/ajax';
+import deepmerge from 'deepmerge';
 
 class RxjsWrapper {
   constructor(apiDefs) {
@@ -35,14 +36,14 @@ class RxjsWrapper {
         middlewaresArgs = { ...middlewaresArgs, ...middleware.handler() };
       }
     });
-    return {
-      ...def,
+    let mergedReqSettings = deepmerge({ middlewaresArgs, req });
+    mergedReqSettings = deepmerge({
+      method: def.method,
       url: this.buildUrl(def.url, req.params, req.query),
       responseType: def.responseType ? def.responseType : 'json',
-      body: req.body,
-      ...req,
-      ...middlewaresArgs,
-    };
+      headers: { 'Content-Type': def.contentType ? def.responseType : 'application/json' },
+    }, mergedReqSettings);
+    return mergedReqSettings;
   }
 
   addRequestMiddlewares(middlewares, ...params) {

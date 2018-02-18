@@ -11,6 +11,7 @@
     "test": "mocha --compilers js:babel-register --recursive"
   },
   "dependencies": {
+    "deepmerge": "^2.0.1",
     "rxjs": "^5.4.0"
   },
   "devDependencies": {

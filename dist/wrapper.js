@@ -26,6 +26,10 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _ajax = require('rxjs/observable/dom/ajax');
 
+var _deepmerge = require('deepmerge');
+
+var _deepmerge2 = _interopRequireDefault(_deepmerge);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var RxjsWrapper = function () {
@@ -74,11 +78,14 @@ var RxjsWrapper = function () {
           middlewaresArgs = (0, _extends4.default)({}, middlewaresArgs, middleware.handler());
         }
       });
-      return (0, _extends4.default)({}, def, {
+      var mergedReqSettings = (0, _deepmerge2.default)({ middlewaresArgs: middlewaresArgs, req: req });
+      mergedReqSettings = (0, _deepmerge2.default)({
+        method: def.method,
         url: this.buildUrl(def.url, req.params, req.query),
         responseType: def.responseType ? def.responseType : 'json',
-        body: req.body
-      }, req, middlewaresArgs);
+        headers: { 'Content-Type': def.contentType ? def.responseType : 'application/json' }
+      }, mergedReqSettings);
+      return mergedReqSettings;
     }
   }, {
     key: 'addRequestMiddlewares',
