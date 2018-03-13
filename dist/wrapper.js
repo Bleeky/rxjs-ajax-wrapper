@@ -26,6 +26,10 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _ajax = require('rxjs/observable/dom/ajax');
 
+var _deepmerge = require('deepmerge');
+
+var _deepmerge2 = _interopRequireDefault(_deepmerge);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var RxjsWrapper = function () {
@@ -49,7 +53,7 @@ var RxjsWrapper = function () {
     value: function buildUrl(url) {
       var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var query = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      // eslint-disable-line
+
       var finalUrl = url;
       Object.keys(params).forEach(function (param) {
         finalUrl = finalUrl.replace(':' + param, params[param]);
@@ -74,6 +78,23 @@ var RxjsWrapper = function () {
           middlewaresArgs = (0, _extends4.default)({}, middlewaresArgs, middleware.handler());
         }
       });
+      var mergedReqSettings = (0, _deepmerge2.default)(middlewaresArgs, req);
+      mergedReqSettings = (0, _deepmerge2.default)({
+        url: this.buildUrl(def.url, req.params, req.query),
+        method: def.method,
+        responseType: def.responseType ? def.responseType : 'json',
+        headers: { 'Content-Type': def.contentType ? def.responseType : 'application/json' }
+      }, mergedReqSettings);
+
+      console.warn(mergedReqSettings);
+      // console.warn(middlewaresArgs);
+      // console.warn(def);
+      // console.warn({
+      //   ...def,
+      //   responseType: def.responseType ? def.responseType : 'json',
+      //   body: req.body,
+      //   ...middlewaresArgs,
+      // });
       return (0, _extends4.default)({}, def, {
         url: this.buildUrl(def.url, req.params, req.query),
         responseType: def.responseType ? def.responseType : 'json',
