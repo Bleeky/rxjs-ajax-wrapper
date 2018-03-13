@@ -53,23 +53,7 @@ class RxjsWrapper {
       },
       mergedReqSettings,
     );
-
-    console.warn(mergedReqSettings);
-    // console.warn(middlewaresArgs);
-    // console.warn(def);
-    // console.warn({
-    //   ...def,
-    //   responseType: def.responseType ? def.responseType : 'json',
-    //   body: req.body,
-    //   ...middlewaresArgs,
-    // });
-    return {
-      ...def,
-      url: this.buildUrl(def.url, req.params, req.query),
-      responseType: def.responseType ? def.responseType : 'json',
-      body: req.body,
-      ...middlewaresArgs,
-    };
+    return mergedReqSettings;
   }
 
   addRequestMiddlewares(middlewares, ...params) {
