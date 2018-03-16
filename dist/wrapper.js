@@ -59,7 +59,9 @@ var RxjsWrapper = function () {
         finalUrl = finalUrl.replace(':' + param, params[param]);
       });
       if (query.constructor === Object && Object.keys(query).length > 0) {
-        finalUrl = finalUrl.concat('?', Object.keys(query).map(function (key) {
+        finalUrl = finalUrl.concat('?', Object.keys(query).filter(function (key) {
+          return query[key];
+        }).map(function (key) {
           return encodeURIComponent(key) + '=' + encodeURIComponent(query[key]);
         }).join('&'));
       } else if (query.constructor === String) {

@@ -24,6 +24,7 @@ class RxjsWrapper {
       finalUrl = finalUrl.concat(
         '?',
         Object.keys(query)
+          .filter(key => query[key])
           .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`)
           .join('&'),
       );
