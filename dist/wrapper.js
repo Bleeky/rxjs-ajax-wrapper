@@ -85,7 +85,7 @@ var RxjsWrapper = function () {
         url: this.buildUrl(def.url, req.params, req.query),
         method: def.method,
         responseType: def.responseType ? def.responseType : 'json',
-        headers: { 'Content-Type': def.contentType ? def.responseType : 'application/json' }
+        headers: { 'Content-Type': def.contentType ? def.contentType : 'application/json' }
       }, mergedReqSettings);
       return mergedReqSettings;
     }
