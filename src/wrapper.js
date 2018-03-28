@@ -54,6 +54,9 @@ class RxjsWrapper {
       },
       mergedReqSettings,
     );
+    if (req.body) {
+      mergedReqSettings.body = req.body;
+    }
     return mergedReqSettings;
   }
 

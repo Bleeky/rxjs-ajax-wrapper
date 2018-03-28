@@ -87,6 +87,9 @@ var RxjsWrapper = function () {
         responseType: def.responseType ? def.responseType : 'json',
         headers: { 'Content-Type': def.contentType ? def.contentType : 'application/json' }
       }, mergedReqSettings);
+      if (req.body) {
+        mergedReqSettings.body = req.body;
+      }
       return mergedReqSettings;
     }
   }, {
