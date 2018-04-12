@@ -86,7 +86,7 @@ class RxjsWrapper {
         ...routes,
         [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
-          req.flatMap(r => r).catch((err) => {
+          return req.flatMap(r => r).catch((err) => {
             console.error('ERROR CATCHED', err);
             this.errorMiddlewares.forEach((middleware) => {
               if (
@@ -97,7 +97,6 @@ class RxjsWrapper {
               }
             });
           });
-          console.error(req);
           // req.catch((err) => {
           //   console.error('ERROR CATCHED', err);
           //   this.errorMiddlewares.forEach((middleware) => {
@@ -119,8 +118,7 @@ class RxjsWrapper {
           //     }
           //   });
           // });
-          console.error(req);
-          return req;
+          // return req;
         },
       };
     });

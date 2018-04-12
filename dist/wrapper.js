@@ -135,7 +135,7 @@ var RxjsWrapper = function () {
           var reqSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { params: {}, body: null, query: {} };
 
           var req = (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));
-          req.flatMap(function (r) {
+          return req.flatMap(function (r) {
             return r;
           }).catch(function (err) {
             console.error('ERROR CATCHED', err);
@@ -147,7 +147,6 @@ var RxjsWrapper = function () {
               }
             });
           });
-          console.error(req);
           // req.catch((err) => {
           //   console.error('ERROR CATCHED', err);
           //   this.errorMiddlewares.forEach((middleware) => {
@@ -169,8 +168,7 @@ var RxjsWrapper = function () {
           //     }
           //   });
           // });
-          console.error(req);
-          return req;
+          // return req;
         }));
       });
       this.routes = routes;
