@@ -136,7 +136,6 @@ var RxjsWrapper = function () {
 
           var req = (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));
           return req.catch(function (err) {
-            console.error('ERROR CATCHED', err);
             _this3.errorMiddlewares.forEach(function (middleware) {
               if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
                 return ignore === middleware.name;
@@ -145,28 +144,6 @@ var RxjsWrapper = function () {
               }
             });
           });
-          // return req.flatMap(r => r).catch((err) => {
-          //   console.error('ERROR CATCHED', err);
-          //   this.errorMiddlewares.forEach((middleware) => {
-          //     if (
-          //       !this.apiDefs[key].ignoreMiddlewares ||
-          //       !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
-          //     ) {
-          //       middleware.handler(err);
-          //     }
-          //   });
-          // });
-          // req.subscribe(null, (err) => {
-          //   this.errorMiddlewares.forEach((middleware) => {
-          //     if (
-          //       !this.apiDefs[key].ignoreMiddlewares ||
-          //       !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
-          //     ) {
-          //       middleware.handler(err);
-          //     }
-          //   });
-          // });
-          // return req;
         }));
       });
       this.routes = routes;

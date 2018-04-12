@@ -87,7 +87,6 @@ class RxjsWrapper {
         [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
           return req.catch((err) => {
-            console.error('ERROR CATCHED', err);
             this.errorMiddlewares.forEach((middleware) => {
               if (
                 !this.apiDefs[key].ignoreMiddlewares ||
@@ -97,28 +96,6 @@ class RxjsWrapper {
               }
             });
           });
-          // return req.flatMap(r => r).catch((err) => {
-          //   console.error('ERROR CATCHED', err);
-          //   this.errorMiddlewares.forEach((middleware) => {
-          //     if (
-          //       !this.apiDefs[key].ignoreMiddlewares ||
-          //       !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
-          //     ) {
-          //       middleware.handler(err);
-          //     }
-          //   });
-          // });
-          // req.subscribe(null, (err) => {
-          //   this.errorMiddlewares.forEach((middleware) => {
-          //     if (
-          //       !this.apiDefs[key].ignoreMiddlewares ||
-          //       !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
-          //     ) {
-          //       middleware.handler(err);
-          //     }
-          //   });
-          // });
-          // return req;
         },
       };
     });
