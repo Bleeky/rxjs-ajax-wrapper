@@ -145,7 +145,19 @@ var RxjsWrapper = function () {
           //     }
           //   });
           // });
-          req.subscribe(null, function (err) {
+          // req.subscribe(null, (err) => {
+          //   this.errorMiddlewares.forEach((middleware) => {
+          //     if (
+          //       !this.apiDefs[key].ignoreMiddlewares ||
+          //       !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
+          //     ) {
+          //       middleware.handler(err);
+          //     }
+          //   });
+          // });
+          try {
+            return req;
+          } catch (err) {
             _this3.errorMiddlewares.forEach(function (middleware) {
               if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
                 return ignore === middleware.name;
@@ -153,8 +165,7 @@ var RxjsWrapper = function () {
                 middleware.handler(err);
               }
             });
-          });
-          return req;
+          }
         }));
       });
       this.routes = routes;

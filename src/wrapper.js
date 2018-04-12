@@ -97,7 +97,19 @@ class RxjsWrapper {
           //     }
           //   });
           // });
-          req.subscribe(null, (err) => {
+          // req.subscribe(null, (err) => {
+          //   this.errorMiddlewares.forEach((middleware) => {
+          //     if (
+          //       !this.apiDefs[key].ignoreMiddlewares ||
+          //       !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
+          //     ) {
+          //       middleware.handler(err);
+          //     }
+          //   });
+          // });
+          try {
+            return req;
+          } catch (err) {
             this.errorMiddlewares.forEach((middleware) => {
               if (
                 !this.apiDefs[key].ignoreMiddlewares ||
@@ -106,8 +118,7 @@ class RxjsWrapper {
                 middleware.handler(err);
               }
             });
-          });
-          return req;
+          }
         },
       };
     });
