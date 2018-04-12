@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { ajax } from 'rxjs/observable/dom/ajax';
 import deepmerge from 'deepmerge';
 
@@ -85,6 +86,17 @@ class RxjsWrapper {
         ...routes,
         [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
+          req.flatMap(r => r).catch((err) => {
+            console.error('ERROR CATCHED', err);
+            this.errorMiddlewares.forEach((middleware) => {
+              if (
+                !this.apiDefs[key].ignoreMiddlewares ||
+                !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
+              ) {
+                middleware.handler(err);
+              }
+            });
+          });
           console.error(req);
           // req.catch((err) => {
           //   console.error('ERROR CATCHED', err);
@@ -107,18 +119,8 @@ class RxjsWrapper {
           //     }
           //   });
           // });
-          try {
-            return req;
-          } catch (err) {
-            this.errorMiddlewares.forEach((middleware) => {
-              if (
-                !this.apiDefs[key].ignoreMiddlewares ||
-                !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
-              ) {
-                middleware.handler(err);
-              }
-            });
-          }
+          console.error(req);
+          return req;
         },
       };
     });

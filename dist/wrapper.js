@@ -24,6 +24,8 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
+var _rxjs = require('rxjs');
+
 var _ajax = require('rxjs/observable/dom/ajax');
 
 var _deepmerge = require('deepmerge');
@@ -133,6 +135,18 @@ var RxjsWrapper = function () {
           var reqSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { params: {}, body: null, query: {} };
 
           var req = (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));
+          req.flatMap(function (r) {
+            return r;
+          }).catch(function (err) {
+            console.error('ERROR CATCHED', err);
+            _this3.errorMiddlewares.forEach(function (middleware) {
+              if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
+                return ignore === middleware.name;
+              })) {
+                middleware.handler(err);
+              }
+            });
+          });
           console.error(req);
           // req.catch((err) => {
           //   console.error('ERROR CATCHED', err);
@@ -155,17 +169,8 @@ var RxjsWrapper = function () {
           //     }
           //   });
           // });
-          try {
-            return req;
-          } catch (err) {
-            _this3.errorMiddlewares.forEach(function (middleware) {
-              if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
-                return ignore === middleware.name;
-              })) {
-                middleware.handler(err);
-              }
-            });
-          }
+          console.error(req);
+          return req;
         }));
       });
       this.routes = routes;
