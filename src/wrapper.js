@@ -86,7 +86,7 @@ class RxjsWrapper {
         ...routes,
         [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
-          return req.flatMap(r => r).catch((err) => {
+          return req.catch((err) => {
             console.error('ERROR CATCHED', err);
             this.errorMiddlewares.forEach((middleware) => {
               if (
@@ -97,7 +97,7 @@ class RxjsWrapper {
               }
             });
           });
-          // req.catch((err) => {
+          // return req.flatMap(r => r).catch((err) => {
           //   console.error('ERROR CATCHED', err);
           //   this.errorMiddlewares.forEach((middleware) => {
           //     if (
