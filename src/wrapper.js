@@ -86,6 +86,7 @@ class RxjsWrapper {
         [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
           req.catch((err) => {
+            console.error('ERROR CATCHED', err);
             this.errorMiddlewares.forEach((middleware) => {
               if (
                 !this.apiDefs[key].ignoreMiddlewares ||
