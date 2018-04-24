@@ -42,7 +42,7 @@ class RxjsWrapper {
         !def.ignoreMiddlewares ||
         !def.ignoreMiddlewares.find(ignore => ignore === middleware.name)
       ) {
-        middlewaresArgs = { ...middlewaresArgs, ...middleware.handler() };
+        middlewaresArgs = deepmerge(middlewaresArgs, middleware.handler());
       }
     });
     let mergedReqSettings = deepmerge(middlewaresArgs, req);
