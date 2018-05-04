@@ -87,17 +87,6 @@ class RxjsWrapper {
         [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
           return req.catch((err) => {
-            // const errorMdwObservables = this.errorMiddlewares.map((middleware) => {
-            //   if (
-            //     !this.apiDefs[key].ignoreMiddlewares ||
-            //     !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
-            //   ) {
-            //     return middleware.handler(err);
-            //   }
-            //   return Observable.empty();
-            // });
-            // return Observable.concat([...errorMdwObservables]);
-            console.error(err, req);
             this.errorMiddlewares.forEach((middleware) => {
               if (
                 !this.apiDefs[key].ignoreMiddlewares ||
