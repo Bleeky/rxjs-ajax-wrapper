@@ -96,7 +96,7 @@ class RxjsWrapper {
               }
               return Observable.empty();
             });
-            Observable.concat(errorMdwObservables);
+            return Observable.concat(errorMdwObservables);
             // this.errorMiddlewares.forEach((middleware) => {
             //   if (
             //     !this.apiDefs[key].ignoreMiddlewares ||

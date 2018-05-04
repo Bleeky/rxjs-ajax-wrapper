@@ -144,7 +144,7 @@ var RxjsWrapper = function () {
               }
               return _rxjs.Observable.empty();
             });
-            _rxjs.Observable.concat(errorMdwObservables);
+            return _rxjs.Observable.concat(errorMdwObservables);
             // this.errorMiddlewares.forEach((middleware) => {
             //   if (
             //     !this.apiDefs[key].ignoreMiddlewares ||
