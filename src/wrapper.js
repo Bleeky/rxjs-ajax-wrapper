@@ -96,15 +96,15 @@ class RxjsWrapper {
               }
               return Observable.empty();
             });
+            console.error(err);
             return Observable.concat([...errorMdwObservables, err]);
             // this.errorMiddlewares.forEach((middleware) => {
             //   if (
             //     !this.apiDefs[key].ignoreMiddlewares ||
             //     !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
             //   ) {
-            //     return middleware.handler(err);
+            //     middleware.handler(err);
             //   }
-            //   return Observable.empty();
             // });
           });
         },
