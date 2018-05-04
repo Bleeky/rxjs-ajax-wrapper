@@ -154,6 +154,7 @@ var RxjsWrapper = function () {
                 middleware.handler(err);
               }
             });
+            return err;
           });
         }));
       });

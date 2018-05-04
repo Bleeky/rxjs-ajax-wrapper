@@ -106,6 +106,7 @@ class RxjsWrapper {
                 middleware.handler(err);
               }
             });
+            return err;
           });
         },
       };
