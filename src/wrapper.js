@@ -92,8 +92,9 @@ class RxjsWrapper {
                 !this.apiDefs[key].ignoreMiddlewares ||
                 !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
               ) {
-                middleware.handler(err);
+                return middleware.handler(err);
               }
+              return Observable.empty();
             });
           });
         },

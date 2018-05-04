@@ -140,8 +140,9 @@ var RxjsWrapper = function () {
               if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
                 return ignore === middleware.name;
               })) {
-                middleware.handler(err);
+                return middleware.handler(err);
               }
+              return _rxjs.Observable.empty();
             });
           });
         }));
