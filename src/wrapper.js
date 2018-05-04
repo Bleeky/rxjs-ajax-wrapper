@@ -87,7 +87,7 @@ class RxjsWrapper {
         [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
           return req.catch((err) => {
-            this.errorMiddlewares.forEach((middleware) => {
+            const errorMdwObservables = this.errorMiddlewares.map((middleware) => {
               if (
                 !this.apiDefs[key].ignoreMiddlewares ||
                 !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
@@ -96,6 +96,16 @@ class RxjsWrapper {
               }
               return Observable.empty();
             });
+            Observable.concat(errorMdwObservables);
+            // this.errorMiddlewares.forEach((middleware) => {
+            //   if (
+            //     !this.apiDefs[key].ignoreMiddlewares ||
+            //     !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
+            //   ) {
+            //     return middleware.handler(err);
+            //   }
+            //   return Observable.empty();
+            // });
           });
         },
       };

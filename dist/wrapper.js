@@ -136,7 +136,7 @@ var RxjsWrapper = function () {
 
           var req = (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));
           return req.catch(function (err) {
-            _this3.errorMiddlewares.forEach(function (middleware) {
+            var errorMdwObservables = _this3.errorMiddlewares.map(function (middleware) {
               if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
                 return ignore === middleware.name;
               })) {
@@ -144,6 +144,16 @@ var RxjsWrapper = function () {
               }
               return _rxjs.Observable.empty();
             });
+            _rxjs.Observable.concat(errorMdwObservables);
+            // this.errorMiddlewares.forEach((middleware) => {
+            //   if (
+            //     !this.apiDefs[key].ignoreMiddlewares ||
+            //     !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
+            //   ) {
+            //     return middleware.handler(err);
+            //   }
+            //   return Observable.empty();
+            // });
           });
         }));
       });
