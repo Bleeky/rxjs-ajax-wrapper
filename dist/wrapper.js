@@ -154,7 +154,7 @@ var RxjsWrapper = function () {
                 middleware.handler(err);
               }
             });
-            return err;
+            throw new Error(err);
           });
         }));
       });

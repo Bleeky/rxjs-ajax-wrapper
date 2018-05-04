@@ -106,7 +106,7 @@ class RxjsWrapper {
                 middleware.handler(err);
               }
             });
-            return err;
+            throw new Error(err);
           });
         },
       };
