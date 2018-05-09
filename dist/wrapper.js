@@ -90,6 +90,8 @@ var RxjsWrapper = function () {
       }, mergedReqSettings);
       if (def.contentType) {
         mergedReqSettings.headers['Content-Type'] = def.contentType;
+      } else if (def.autoContentType === undefined) {
+        mergedReqSettings.headers['Content-Type'] = 'application/json';
       }
       if (req.body) {
         mergedReqSettings.body = req.body;
