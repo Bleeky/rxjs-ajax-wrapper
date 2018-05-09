@@ -51,6 +51,7 @@ class RxjsWrapper {
         url: this.buildUrl(def.url, req.params, req.query),
         method: def.method,
         responseType: def.responseType ? def.responseType : 'json',
+        headers: {},
       },
       mergedReqSettings,
     );

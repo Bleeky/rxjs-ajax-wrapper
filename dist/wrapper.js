@@ -86,7 +86,8 @@ var RxjsWrapper = function () {
       mergedReqSettings = (0, _deepmerge2.default)({
         url: this.buildUrl(def.url, req.params, req.query),
         method: def.method,
-        responseType: def.responseType ? def.responseType : 'json'
+        responseType: def.responseType ? def.responseType : 'json',
+        headers: {}
       }, mergedReqSettings);
       if (def.contentType) {
         mergedReqSettings.headers['Content-Type'] = def.contentType;
