@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.combineWrappers = exports.RxjsWrapper = undefined;
+exports.CombineWrappers = exports.RxjsWrapper = undefined;
 
 var _wrapper = require('./wrapper');
 
@@ -16,4 +16,4 @@ var _library2 = _interopRequireDefault(_library);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.RxjsWrapper = _wrapper2.default;
-exports.combineWrappers = _library2.default;
+exports.CombineWrappers = _library2.default;

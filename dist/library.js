@@ -14,21 +14,35 @@ var _extends4 = _interopRequireDefault(_extends3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var combineWrappers = function combineWrappers(wrappers) {
+function CombineWrappers(wrappers) {
+  var _this = this;
+
   var reqMdw = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { reqMdw: null, reqMdwParams: null };
   var errMdw = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : { errMdw: null, errMdwParams: null };
 
-  var wrapped = {};
-  Object.keys(wrappers).forEach(function (key) {
+  this.resources = {};
+  this.wrappers = wrappers;
+  Object.keys(this.wrappers).forEach(function (key) {
     if (reqMdw.reqMdw) {
-      wrappers[key].addRequestMiddlewares(reqMdw.reqMdw, reqMdw.reqMdwParams);
+      _this.wrappers[key].addRequestMiddlewares(reqMdw.reqMdw, reqMdw.reqMdwParams);
     }
     if (errMdw.errMdw) {
-      wrappers[key].addErrorMiddlewares(errMdw.errMdw, errMdw.errMdwParams);
+      _this.wrappers[key].addErrorMiddlewares(errMdw.errMdw, errMdw.errMdwParams);
     }
-    wrapped = (0, _extends4.default)((0, _defineProperty3.default)({}, key, wrappers[key].routes), wrapped);
+    _this.resources = (0, _extends4.default)((0, _defineProperty3.default)({}, key, _this.wrappers[key].routes), _this.resources);
   });
-  return wrapped;
-};
 
-exports.default = combineWrappers;
+  this.addRequestMiddlewares = function (middlewares, middlewareParams) {
+    Object.keys(_this.wrappers).forEach(function (key) {
+      _this.wrappers[key].addRequestMiddlewares(middlewares, middlewareParams);
+    });
+  };
+
+  this.addErrorMiddlewares = function (middlewares, middlewareParams) {
+    Object.keys(_this.wrappers).forEach(function (key) {
+      _this.wrappers[key].addErrorMiddlewares(middlewares, middlewareParams);
+    });
+  };
+}
+
+exports.default = CombineWrappers;

@@ -26,7 +26,9 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _rxjs = require('rxjs');
 
-var _ajax = require('rxjs/observable/dom/ajax');
+var _ajax = require('rxjs/ajax');
+
+var _operators = require('rxjs/operators');
 
 var _deepmerge = require('deepmerge');
 
@@ -109,9 +111,13 @@ var RxjsWrapper = function () {
       }
 
       middlewares.forEach(function (middleware) {
-        _this.requestMiddlewares = [].concat((0, _toConsumableArray3.default)(_this.requestMiddlewares), [{ name: middleware.name, handler: function handler() {
-            return middleware.handler.apply(middleware, params);
-          } }]);
+        if (!_this.requestMiddlewares.find(function (mid) {
+          return mid.name === middleware.name;
+        })) {
+          _this.requestMiddlewares = [].concat((0, _toConsumableArray3.default)(_this.requestMiddlewares), [{ name: middleware.name, handler: function handler() {
+              return middleware.handler.apply(middleware, params);
+            } }]);
+        }
       });
     }
   }, {
@@ -140,7 +146,7 @@ var RxjsWrapper = function () {
           var reqSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { params: {}, body: null, query: {} };
 
           var req = (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));
-          return req.catch(function (err) {
+          return req.pipe((0, _operators.catchError)(function (err) {
             _this3.errorMiddlewares.forEach(function (middleware) {
               if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
                 return ignore === middleware.name;
@@ -149,7 +155,7 @@ var RxjsWrapper = function () {
               }
             });
             throw err;
-          });
+          }));
         }));
       });
       this.routes = routes;

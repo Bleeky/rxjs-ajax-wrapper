@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
-import { ajax } from 'rxjs/observable/dom/ajax';
+import { ajax } from 'rxjs/ajax';
+import { catchError } from 'rxjs/operators';
 import deepmerge from 'deepmerge';
 
 class RxjsWrapper {
@@ -93,7 +94,7 @@ class RxjsWrapper {
         ...routes,
         [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
-          return req.catch((err) => {
+          return req.pipe(catchError((err) => {
             this.errorMiddlewares.forEach((middleware) => {
               if (
                 !this.apiDefs[key].ignoreMiddlewares ||
@@ -103,7 +104,7 @@ class RxjsWrapper {
               }
             });
             throw err;
-          });
+          }));
         },
       };
     });
