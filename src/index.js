@@ -1,7 +1,7 @@
 import RxjsWrapper from './wrapper';
-import combineWrappers from './library';
+import CombineWrappers from './library';
 
 export {
   RxjsWrapper,
-  combineWrappers,
+  CombineWrappers,
 };

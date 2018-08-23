@@ -1,7 +1,7 @@
 global.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
 import chai from 'chai';
-import { RxjsWrapper } from '../src';
+import { RxjsWrapper, CombineWrappers } from '../src';
 
 const apiDefs = {
   getAllFilms: {
@@ -29,6 +29,13 @@ const apiDefs = {
     ignoreMiddlewares: [
       '404',
     ],
+  },
+};
+const fakeApiDefs = {
+  fakeRoute: {
+    url: 'https://ghibliapi.herokuapp.com/films',
+    method: 'GET',
+    responseType: 'json',
   },
 };
 
@@ -154,6 +161,52 @@ describe('Wrapper', () => {
         },
       ]);
       api.routes.getWrongAllFilmsIgnore().subscribe(
+        (data) => {
+          done();
+        },
+        (error) => {
+          chai.assert.equal('404', error.status);
+          done();
+        },
+      );
+    });
+  });
+  describe('#call combineWrappers', () => {
+    it('Should combine wrappers', (done) => {
+      const api = new RxjsWrapper(apiDefs);
+      const fakeApi = new RxjsWrapper(fakeApiDefs);
+      const wrapped = new CombineWrappers({ api, fakeApi });
+      wrapped.resources.api.getAllFilms().subscribe(
+        (data) => {
+          chai.should();
+          data.response.should.have.lengthOf(20);
+          chai.assert.equal(Array, data.response.constructor);
+          done();
+        },
+        (error) => {
+          done();
+        },
+      );
+    });
+  });
+  describe('#call combineWrappers and add middleware afterwards', () => {
+    it('Should combine wrappers and add middleware afterwards', (done) => {
+      const api = new RxjsWrapper(apiDefs);
+      const fakeApi = new RxjsWrapper(fakeApiDefs);
+      const wrapped = new CombineWrappers({ api, fakeApi });
+      wrapped.addErrorMiddlewares([
+        {
+          name: '404',
+          handler: (request) => {
+            chai.assert.equal('404', request.status);
+            if (request.status === 404) {
+              chai.should();
+              chai.assert.equal('404', request.status);
+            }
+          },
+        },
+      ]);
+      wrapped.resources.api.getWrongAllFilms().subscribe(
         (data) => {
           done();
         },

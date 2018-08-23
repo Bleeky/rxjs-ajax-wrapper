@@ -1,17 +1,29 @@
-const combineWrappers = (wrappers,
+function CombineWrappers(wrappers,
   reqMdw = { reqMdw: null, reqMdwParams: null },
-  errMdw = { errMdw: null, errMdwParams: null }) => {
-  let wrapped = {};
-  Object.keys(wrappers).forEach((key) => {
+  errMdw = { errMdw: null, errMdwParams: null }) {
+  this.resources = {};
+  this.wrappers = wrappers;
+  Object.keys(this.wrappers).forEach((key) => {
     if (reqMdw.reqMdw) {
-      wrappers[key].addRequestMiddlewares(reqMdw.reqMdw, reqMdw.reqMdwParams);
+      this.wrappers[key].addRequestMiddlewares(reqMdw.reqMdw, reqMdw.reqMdwParams);
     }
     if (errMdw.errMdw) {
-      wrappers[key].addErrorMiddlewares(errMdw.errMdw, errMdw.errMdwParams);
+      this.wrappers[key].addErrorMiddlewares(errMdw.errMdw, errMdw.errMdwParams);
     }
-    wrapped = { [key]: wrappers[key].routes, ...wrapped };
+    this.resources = { [key]: this.wrappers[key].routes, ...this.resources };
   });
-  return wrapped;
-};
 
-export default combineWrappers;
+  this.addRequestMiddlewares = (middlewares, middlewareParams) => {
+    Object.keys(this.wrappers).forEach((key) => {
+      this.wrappers[key].addRequestMiddlewares(middlewares, middlewareParams);
+    });
+  };
+
+  this.addErrorMiddlewares = (middlewares, middlewareParams) => {
+    Object.keys(this.wrappers).forEach((key) => {
+      this.wrappers[key].addErrorMiddlewares(middlewares, middlewareParams);
+    });
+  };
+}
+
+export default CombineWrappers;

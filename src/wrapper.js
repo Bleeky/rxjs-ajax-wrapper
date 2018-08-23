@@ -68,10 +68,12 @@ class RxjsWrapper {
 
   addRequestMiddlewares(middlewares, ...params) {
     middlewares.forEach((middleware) => {
-      this.requestMiddlewares = [
-        ...this.requestMiddlewares,
-        { name: middleware.name, handler: () => middleware.handler(...params) },
-      ];
+      if (!this.requestMiddlewares.find(mid => mid.name === middleware.name)) {
+        this.requestMiddlewares = [
+          ...this.requestMiddlewares,
+          { name: middleware.name, handler: () => middleware.handler(...params) },
+        ];
+      }
     });
   }
 
