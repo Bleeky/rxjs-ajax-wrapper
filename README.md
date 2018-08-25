@@ -1,12 +1,14 @@
 ### rxjs-ajax-wrapper
 
+*Disclaimer*: Uses RxJS v6, for RxJS v5 compatible wrapper, please check `v0.1.38`.
+
 [![Version](https://img.shields.io/npm/v/rxjs-ajax-wrapper.svg)](https://www.npmjs.org/package/rxjs-ajax-wrapper)
 [![npm download][download-image]][download-url]
 
 [download-image]: https://img.shields.io/npm/dm/rxjs-ajax-wrapper.svg?style=flat-square
 [download-url]: https://npmjs.org/package/rxjs-ajax-wrapper
 
-Simple to use and simple to setup wrapper for rxjs. Allows you to define your distant resources api and call them on the fly.
+Simple to use and simple to setup wrapper for rxjs. Allows you to define your distant resources api and call them on the fly, while having set custom middlewares beforehand !
 
 ## How to use
 
@@ -59,7 +61,21 @@ Checkout [https://github.com/Reactive-Extensions/RxJS-DOM/blob/master/doc/operat
 
 Function | Explanation | Arguments | Return Value | Example
 ------------ | ------------- | -------------  | -------------  | -------------
-`combineWrappers()` | Combine multiples wrappers. | `({wrapperKey: wrapper, ...})` | The combined wrappers, with each wrapper routes in the respective wrapper object. | `combineWrappers({authWrapper, filmWrapper});`
+`CombineWrappers()` | Combine multiples wrappers. | `({wrapperKey: wrapper, ...})` | The combined wrappers, with each wrapper routes in the respective wrapper object. | `new CombineWrappers({auth: authWrapper, film: filmWrapper});`
+
+`CombineWrappers` will return an object like this:
+```javascript
+{
+  resources: {
+    auth,
+    film,
+  }
+  addErrorMiddlewares, // See Methods
+  addRequestMiddlewares, // See Methods
+}
+```
+
+It is then possible to add an error/request middleware after the creation of the `Wrapper` (ex: when having logged-in etc ...).
 
 ## Methods
 
@@ -89,4 +105,4 @@ const apiDefs = {
 
 # Todo ideas
 
-* Update/delete middleware.
+* Update/remove middleware.
