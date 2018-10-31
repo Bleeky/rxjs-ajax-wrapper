@@ -38,8 +38,8 @@ function CombineWrappers(wrappers) {
     }
     if (errMdw.errMdw) {
       _this.errorMiddlewares = {
-        middlewares: [].concat((0, _toConsumableArray3.default)(_this.errMiddlewares.middlewares), (0, _toConsumableArray3.default)(errMdw.errMdw)),
-        params: (0, _extends4.default)({}, _this.errMiddlewares.params, errMdw.errMdwParams)
+        middlewares: [].concat((0, _toConsumableArray3.default)(_this.errorMiddlewares.middlewares), (0, _toConsumableArray3.default)(errMdw.errMdw)),
+        params: (0, _extends4.default)({}, _this.errorMiddlewares.params, errMdw.errMdwParams)
       };
       _this.wrappers[key].addErrorMiddlewares(errMdw.errMdw, errMdw.errMdwParams);
     }
@@ -71,9 +71,9 @@ function CombineWrappers(wrappers) {
   };
 
   this.addErrorMiddlewares = function (middlewares, middlewareParams) {
-    _this.requestMiddlewares = {
-      middlewares: [].concat((0, _toConsumableArray3.default)(_this.requestMiddlewares.middlewares), (0, _toConsumableArray3.default)(middlewares)),
-      params: (0, _extends4.default)({}, _this.requestMiddlewares.params, middlewareParams)
+    _this.errorMiddlewares = {
+      middlewares: [].concat((0, _toConsumableArray3.default)(_this.errorMiddlewares.middlewares), (0, _toConsumableArray3.default)(middlewares)),
+      params: (0, _extends4.default)({}, _this.errorMiddlewares.params, middlewareParams)
     };
     Object.keys(_this.wrappers).forEach(function (key) {
       _this.wrappers[key].addErrorMiddlewares(_this.errorMiddlewares.middlewares, _this.errorMiddlewares.params);

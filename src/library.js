@@ -17,8 +17,8 @@ function CombineWrappers(
     }
     if (errMdw.errMdw) {
       this.errorMiddlewares = {
-        middlewares: [...this.errMiddlewares.middlewares, ...errMdw.errMdw],
-        params: { ...this.errMiddlewares.params, ...errMdw.errMdwParams },
+        middlewares: [...this.errorMiddlewares.middlewares, ...errMdw.errMdw],
+        params: { ...this.errorMiddlewares.params, ...errMdw.errMdwParams },
       };
       this.wrappers[key].addErrorMiddlewares(errMdw.errMdw, errMdw.errMdwParams);
     }
@@ -59,9 +59,9 @@ function CombineWrappers(
   };
 
   this.addErrorMiddlewares = (middlewares, middlewareParams) => {
-    this.requestMiddlewares = {
-      middlewares: [...this.requestMiddlewares.middlewares, ...middlewares],
-      params: { ...this.requestMiddlewares.params, ...middlewareParams },
+    this.errorMiddlewares = {
+      middlewares: [...this.errorMiddlewares.middlewares, ...middlewares],
+      params: { ...this.errorMiddlewares.params, ...middlewareParams },
     };
     Object.keys(this.wrappers).forEach((key) => {
       this.wrappers[key].addErrorMiddlewares(
