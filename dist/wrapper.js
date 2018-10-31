@@ -148,20 +148,13 @@ var RxjsWrapper = function () {
 
           var req = (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));
           return req.pipe((0, _operators.catchError)(function (err) {
-            var actionsOut = [];
             _this3.errorMiddlewares.forEach(function (middleware) {
               if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
                 return ignore === middleware.name;
               })) {
-                var errorObservable = middleware.handler(err, extras);
-                if (errorObservable) {
-                  actionsOut = [].concat((0, _toConsumableArray3.default)(actionsOut), [errorObservable]);
-                }
+                middleware.handler(err, extras);
               }
             });
-            if (actionsOut.length > 0) {
-              return _rxjs.concat.apply(undefined, (0, _toConsumableArray3.default)(actionsOut));
-            }
             throw err;
           }));
         }));
