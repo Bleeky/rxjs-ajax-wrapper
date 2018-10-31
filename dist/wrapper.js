@@ -130,9 +130,12 @@ var RxjsWrapper = function () {
       }
 
       middlewares.forEach(function (middleware) {
-        _this2.errorMiddlewares = [].concat((0, _toConsumableArray3.default)(_this2.errorMiddlewares), [{ name: middleware.name, handler: function handler(request) {
-            return middleware.handler.apply(middleware, [request].concat(params));
-          } }]);
+        _this2.errorMiddlewares = [].concat((0, _toConsumableArray3.default)(_this2.errorMiddlewares), [{
+          name: middleware.name,
+          handler: function handler(request, extras) {
+            return middleware.handler.apply(middleware, [request, extras].concat(params));
+          }
+        }]);
       });
     }
   }, {

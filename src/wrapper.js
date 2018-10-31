@@ -40,8 +40,8 @@ class RxjsWrapper {
     let middlewaresArgs = {};
     this.requestMiddlewares.forEach((middleware) => {
       if (
-        !def.ignoreMiddlewares ||
-        !def.ignoreMiddlewares.find(ignore => ignore === middleware.name)
+        !def.ignoreMiddlewares
+        || !def.ignoreMiddlewares.find(ignore => ignore === middleware.name)
       ) {
         middlewaresArgs = deepmerge(middlewaresArgs, middleware.handler());
       }
@@ -82,7 +82,10 @@ class RxjsWrapper {
     middlewares.forEach((middleware) => {
       this.errorMiddlewares = [
         ...this.errorMiddlewares,
-        { name: middleware.name, handler: request => middleware.handler(request, ...params) },
+        {
+          name: middleware.name,
+          handler: (request, extras) => middleware.handler(request, extras, ...params),
+        },
       ];
     });
   }
@@ -94,17 +97,19 @@ class RxjsWrapper {
         ...routes,
         [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }, extras) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
-          return req.pipe(catchError((err) => {
-            this.errorMiddlewares.forEach((middleware) => {
-              if (
-                !this.apiDefs[key].ignoreMiddlewares ||
-                !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
-              ) {
-                middleware.handler(err, extras);
-              }
-            });
-            throw err;
-          }));
+          return req.pipe(
+            catchError((err) => {
+              this.errorMiddlewares.forEach((middleware) => {
+                if (
+                  !this.apiDefs[key].ignoreMiddlewares
+                  || !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
+                ) {
+                  middleware.handler(err, extras);
+                }
+              });
+              throw err;
+            }),
+          );
         },
       };
     });
