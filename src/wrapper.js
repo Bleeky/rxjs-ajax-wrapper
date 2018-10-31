@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, concat } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError } from 'rxjs/operators';
 import deepmerge from 'deepmerge';
@@ -92,17 +92,24 @@ class RxjsWrapper {
     Object.keys(this.apiDefs).forEach((key) => {
       routes = {
         ...routes,
-        [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
+        [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }, extras) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
           return req.pipe(catchError((err) => {
+            let actionsOut = [];
             this.errorMiddlewares.forEach((middleware) => {
               if (
                 !this.apiDefs[key].ignoreMiddlewares ||
                 !this.apiDefs[key].ignoreMiddlewares.find(ignore => ignore === middleware.name)
               ) {
-                middleware.handler(err);
+                const errorObservable = middleware.handler(err, extras);
+                if (errorObservable) {
+                  actionsOut = [...actionsOut, errorObservable];
+                }
               }
             });
+            if (actionsOut.length > 0) {
+              return concat(...actionsOut);
+            }
             throw err;
           }));
         },

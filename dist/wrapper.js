@@ -144,16 +144,24 @@ var RxjsWrapper = function () {
       Object.keys(this.apiDefs).forEach(function (key) {
         routes = (0, _extends4.default)({}, routes, (0, _defineProperty3.default)({}, '' + key, function undefined() {
           var reqSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { params: {}, body: null, query: {} };
+          var extras = arguments[1];
 
           var req = (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));
           return req.pipe((0, _operators.catchError)(function (err) {
+            var actionsOut = [];
             _this3.errorMiddlewares.forEach(function (middleware) {
               if (!_this3.apiDefs[key].ignoreMiddlewares || !_this3.apiDefs[key].ignoreMiddlewares.find(function (ignore) {
                 return ignore === middleware.name;
               })) {
-                middleware.handler(err);
+                var errorObservable = middleware.handler(err, extras);
+                if (errorObservable) {
+                  actionsOut = [].concat((0, _toConsumableArray3.default)(actionsOut), [errorObservable]);
+                }
               }
             });
+            if (actionsOut.length > 0) {
+              return _rxjs.concat.apply(undefined, (0, _toConsumableArray3.default)(actionsOut));
+            }
             throw err;
           }));
         }));
