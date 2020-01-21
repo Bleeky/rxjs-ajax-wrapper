@@ -25,4 +25,17 @@
     ],
     "stage-0",
   ],
+  "env": {
+    "production": {
+      "presets": [
+        [
+          "minify",
+          {
+            "evaluate": false,
+            "removeUndefined": false
+          }
+        ]
+      ]
+    }
+  }
 }
