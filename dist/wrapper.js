@@ -1,36 +1,36 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+var _defineProperty2 = require("babel-runtime/helpers/defineProperty");
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
-var _extends3 = require('babel-runtime/helpers/extends');
+var _extends3 = require("babel-runtime/helpers/extends");
 
 var _extends4 = _interopRequireDefault(_extends3);
 
-var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
+var _toConsumableArray2 = require("babel-runtime/helpers/toConsumableArray");
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = require('babel-runtime/helpers/createClass');
+var _createClass2 = require("babel-runtime/helpers/createClass");
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _rxjs = require('rxjs');
+var _rxjs = require("rxjs");
 
-var _ajax = require('rxjs/ajax');
+var _ajax = require("rxjs/ajax");
 
-var _operators = require('rxjs/operators');
+var _operators = require("rxjs/operators");
 
-var _deepmerge = require('deepmerge');
+var _deepmerge = require("deepmerge");
 
 var _deepmerge2 = _interopRequireDefault(_deepmerge);
 
@@ -53,28 +53,28 @@ var RxjsWrapper = function () {
   }
 
   (0, _createClass3.default)(RxjsWrapper, [{
-    key: 'buildUrl',
+    key: "buildUrl",
     value: function buildUrl(url) {
       var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var query = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
       var finalUrl = url;
       Object.keys(params).forEach(function (param) {
-        finalUrl = finalUrl.replace(':' + param, params[param]);
+        finalUrl = finalUrl.replace(":" + param, params[param]);
       });
       if (query.constructor === Object && Object.keys(query).length > 0) {
-        finalUrl = finalUrl.concat('?', Object.keys(query).filter(function (key) {
+        finalUrl = finalUrl.concat("?", Object.keys(query).filter(function (key) {
           return query[key];
         }).map(function (key) {
-          return encodeURIComponent(key) + '=' + encodeURIComponent(query[key]);
-        }).join('&'));
+          return encodeURIComponent(key) + "=" + encodeURIComponent(query[key]);
+        }).join("&"));
       } else if (query.constructor === String) {
-        finalUrl = finalUrl.concat('?', query);
+        finalUrl = finalUrl.concat("?", query);
       }
       return finalUrl;
     }
   }, {
-    key: 'defBuilder',
+    key: "defBuilder",
     value: function defBuilder(def, req) {
       var middlewaresArgs = {};
       this.requestMiddlewares.forEach(function (middleware) {
@@ -88,21 +88,28 @@ var RxjsWrapper = function () {
       mergedReqSettings = (0, _deepmerge2.default)({
         url: this.buildUrl(def.url, req.params, req.query),
         method: def.method,
-        responseType: def.responseType ? def.responseType : 'json',
+        responseType: def.responseType ? def.responseType : "json",
         headers: {}
       }, mergedReqSettings);
       if (def.contentType) {
-        mergedReqSettings.headers['Content-Type'] = def.contentType;
+        mergedReqSettings.headers["Content-Type"] = def.contentType;
       } else if (def.autoContentType === undefined) {
-        mergedReqSettings.headers['Content-Type'] = 'application/json';
+        mergedReqSettings.headers["Content-Type"] = "application/json";
       }
       if (req.body) {
         mergedReqSettings.body = req.body;
       }
+      if (req.withProgress) {
+        var progressSubscriber = new _rxjs.Subject();
+        mergedReqSettings.progressSubscriber = _rxjs.Subscriber.create(function (e) {
+          var percentComplete = Math.round(e.loaded / e.total * 100);
+          progressSubscriber.next(req.withProgress(percentComplete));
+        });
+      }
       return mergedReqSettings;
     }
   }, {
-    key: 'addRequestMiddlewares',
+    key: "addRequestMiddlewares",
     value: function addRequestMiddlewares(middlewares) {
       var _this = this;
 
@@ -114,14 +121,17 @@ var RxjsWrapper = function () {
         if (!_this.requestMiddlewares.find(function (mid) {
           return mid.name === middleware.name;
         })) {
-          _this.requestMiddlewares = [].concat((0, _toConsumableArray3.default)(_this.requestMiddlewares), [{ name: middleware.name, handler: function handler() {
+          _this.requestMiddlewares = [].concat((0, _toConsumableArray3.default)(_this.requestMiddlewares), [{
+            name: middleware.name,
+            handler: function handler() {
               return middleware.handler.apply(middleware, params);
-            } }]);
+            }
+          }]);
         }
       });
     }
   }, {
-    key: 'addErrorMiddlewares',
+    key: "addErrorMiddlewares",
     value: function addErrorMiddlewares(middlewares) {
       var _this2 = this;
 
@@ -130,19 +140,22 @@ var RxjsWrapper = function () {
       }
 
       middlewares.forEach(function (middleware) {
-        _this2.errorMiddlewares = [].concat((0, _toConsumableArray3.default)(_this2.errorMiddlewares), [{ name: middleware.name, handler: function handler(request) {
+        _this2.errorMiddlewares = [].concat((0, _toConsumableArray3.default)(_this2.errorMiddlewares), [{
+          name: middleware.name,
+          handler: function handler(request) {
             return middleware.handler.apply(middleware, [request].concat(params));
-          } }]);
+          }
+        }]);
       });
     }
   }, {
-    key: 'init',
+    key: "init",
     value: function init() {
       var _this3 = this;
 
       var routes = {};
       Object.keys(this.apiDefs).forEach(function (key) {
-        routes = (0, _extends4.default)({}, routes, (0, _defineProperty3.default)({}, '' + key, function undefined() {
+        routes = (0, _extends4.default)({}, routes, (0, _defineProperty3.default)({}, "" + key, function undefined() {
           var reqSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { params: {}, body: null, query: {} };
 
           var req = (0, _ajax.ajax)(_this3.defBuilder(_this3.apiDefs[key], reqSettings));

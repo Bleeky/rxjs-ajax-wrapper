@@ -2,12 +2,16 @@
   "env": {
     "browser": true,
   },
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:prettier/recommended",
+    "prettier/react"
+  ],
   "parser": "babel-eslint",
   "rules": {
     "eol-last": 1,
     "no-console": 0,
-    import/no-extraneous-dependencies: [error, { devDependencies: true }],
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
   },
   "settings": {
     "import/resolver": {

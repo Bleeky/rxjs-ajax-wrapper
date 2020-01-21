@@ -1,7 +1,7 @@
-global.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
-
 import chai from 'chai';
 import { RxjsWrapper, CombineWrappers } from '../src';
+
+global.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
 const apiDefs = {
   getAllFilms: {
