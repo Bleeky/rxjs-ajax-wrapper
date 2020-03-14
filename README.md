@@ -100,7 +100,7 @@ It is then possible to add an error/request middleware after the creation of the
 
 **Example**
 
-Here is a very basic example using `redux-observable` library.
+Here is an example using `redux-observable` library. We're adding the token as middleware to our requests, as well as error middlewares for handling the token validity and unauthorized errors.
 
 ```javascript
 import { CombineWrappers } from 'rxjs-ajax-wrapper';
@@ -113,8 +113,40 @@ const appApi = new CombineWrappers({
   another: anotherApi;
 });
 
-...
+appApi.addRequestMiddlewares([
+  {
+    name: 'token',
+    handler: () => ({ headers: { Authorization: 'sometoken' } }),
+  }
+]);
+api.addErrorMiddlewares([
+  {
+    name: 'tokenExpired',
+    handler: (req, extras) => {
+      if (req.status === 401 && checkObj(req, ['response', 'code']) === 'token_expired') {
+        store.dispatch({ type: 'ADD_TO_REFRESH_QUEUE', values: extras });
+        store.dispatch(
+          refreshToken({
+            values: {
+              refresh_token: store.getState().auth.refreshToken,
+              access_token: store.getState().auth.token
+            }
+           })
+        );
+      }
+     }
+  },
+  {
+    name: 'notAllowed',
+    handler: (req, extras) => {
+      if (req.status === 401 && checkObj(req, ['response', 'code']) === 'not_allowed') {
+        browserHistory.push('/unauthorized');
+        }
+      }
+    }
+]);
 
+...
 
 const loginEpic = action$ =>
   action$.pipe(
@@ -123,12 +155,6 @@ const loginEpic = action$ =>
       race(
         appApi.resources.login.login({body: JSON.stringify(action.payload)}).pipe(
           flatMap(response => {
-            appApi.addRequestMiddlewares([
-              {
-                name: 'token',
-                handler: () => ({ headers: { Authorization: 'sometoken' } }),
-              }
-            ]);
             return of(loginFulfilled(response.response));
           }),
           catchError(error => of(loginRejected(error))),
@@ -169,7 +195,3 @@ const apiDefs = {
   },
 };
 ```
-
-# Todo ideas
-
-* Update/remove middleware.
