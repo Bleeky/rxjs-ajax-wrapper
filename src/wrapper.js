@@ -97,7 +97,7 @@ class RxjsWrapper {
         ...this.errorMiddlewares,
         {
           name: middleware.name,
-          handler: request => middleware.handler(request, ...params)
+          handler: (request, extras) => middleware.handler(request, extras, ...params),
         }
       ];
     });
@@ -108,7 +108,7 @@ class RxjsWrapper {
     Object.keys(this.apiDefs).forEach(key => {
       routes = {
         ...routes,
-        [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }) => {
+        [`${key}`]: (reqSettings = { params: {}, body: null, query: {} }, extras) => {
           const req = ajax(this.defBuilder(this.apiDefs[key], reqSettings));
           return req.pipe(
             catchError(err => {
@@ -119,7 +119,7 @@ class RxjsWrapper {
                     ignore => ignore === middleware.name
                   )
                 ) {
-                  middleware.handler(err);
+                  middleware.handler(err, extras);
                 }
               });
               throw err;
